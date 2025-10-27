@@ -1,11 +1,11 @@
 """
-Basic usage example for sparse-transcoder
+Basic usage example for sparse-clt
 
 Shows how to extract sparse features from transformer activations
 """
 
 import torch
-from sparse_transcoder import SparseCLTEncoder, TranscoderWeights
+from sparse_clt import SparseCLTEncoder, TranscoderWeights
 
 
 def example_basic():
