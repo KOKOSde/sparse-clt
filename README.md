@@ -103,14 +103,13 @@ for layer_idx, layer_features in features.items():
 
 ### Why Use This Library?
 
-| Feature | Manual Loops | Sparse CLT |
-|---------|-------------|------------|
-| API simplicity | ❌ Manual loops | ✅ One function call |
-| Memory efficiency | ❌ OOM on long seq | ✅ Handles any length |
-| Batched processing | ❌ Sequential | ✅ All layers at once |
-| Production ready | ❌ Research code | ✅ Tested & documented |
+**Key Benefits:**
+- **Simple API:** One function call vs manual loops
+- **Memory Efficient:** Automatic chunking handles sequences of any length
+- **Batched Processing:** Process all layers simultaneously instead of sequentially  
+- **Production Ready:** Well-tested, documented code vs research prototypes
 
-**Speed:** Equivalent to manual implementation (~45ms per layer) but with much cleaner API and automatic memory management.
+**Performance:** Equivalent speed to manual implementation (~45ms per layer) with significantly better API and automatic memory management.
 
 ---
 
@@ -333,7 +332,7 @@ GitHub: [@KOKOSde](https://github.com/KOKOSde)
 
 <div align="center">
 
-**⚡ Fast | 🎯 Accurate | 📦 Easy to Use**
+**Fast | Accurate | Easy to Use**
 
 [Documentation](https://github.com/KOKOSde/sparse-clt) | [PyPI](https://pypi.org/project/sparse-clt/) | [Issues](https://github.com/KOKOSde/sparse-clt/issues)
 
