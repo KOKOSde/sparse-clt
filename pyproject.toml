@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sparse-transcoder"
+dynamic = ["version"]
+description = "Optimized sparse feature extraction for transformer models (LLMs/VLMs)"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Fahad Alghanim", email = "fkalghan@email.sc.edu"}
+]
+keywords = [
+    "pytorch",
+    "transformers",
+    "interpretability",
+    "feature-extraction",
+    "sparse-coding",
+    "llm",
+    "vision-language-models",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "torch>=2.0.0",
+    "numpy>=1.20.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "flake8>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/KOKOSde/sparse-transcoder"
+Documentation = "https://github.com/KOKOSde/sparse-transcoder#readme"
+Repository = "https://github.com/KOKOSde/sparse-transcoder"
+"Bug Tracker" = "https://github.com/KOKOSde/sparse-transcoder/issues"
+
+[tool.setuptools.dynamic]
+version = {attr = "sparse_transcoder.__version__"}
+
