@@ -1,5 +1,5 @@
 """
-Setup script for sparse-transcoder package
+Setup script for sparse-clt package
 """
 
 from setuptools import setup, find_packages
@@ -10,21 +10,21 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 # Read version
-with open("sparse_transcoder/__init__.py", "r") as f:
+with open("sparse_clt/__init__.py", "r") as f:
     for line in f:
         if line.startswith("__version__"):
             version = line.split('"')[1]
             break
 
 setup(
-    name="sparse-transcoder",
+    name="sparse-clt",
     version=version,
     author="Fahad Alghanim",
     author_email="fkalghan@email.sc.edu",
     description="Optimized sparse feature extraction for transformer models (LLMs/VLMs)",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/KOKOSde/sparse-transcoder",
+    url="https://github.com/KOKOSde/sparse-clt",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -65,9 +65,9 @@ setup(
         "vision-language-models",
     ],
     project_urls={
-        "Bug Reports": "https://github.com/KOKOSde/sparse-transcoder/issues",
-        "Source": "https://github.com/KOKOSde/sparse-transcoder",
-        "Documentation": "https://github.com/KOKOSde/sparse-transcoder#readme",
+        "Bug Reports": "https://github.com/KOKOSde/sparse-clt/issues",
+        "Source": "https://github.com/KOKOSde/sparse-clt",
+        "Documentation": "https://github.com/KOKOSde/sparse-clt#readme",
     },
 )
 

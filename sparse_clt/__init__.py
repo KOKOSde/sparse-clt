@@ -6,13 +6,13 @@ Author: Fahad Alghanim
 __version__ = "0.1.0"
 
 from .encoder import (
-    SparseTranscoderEncoder,
+    SparseCLTEncoder,
     TranscoderWeights,
-    load_transcoders_from_dir as load_transcoders
+    load_transcoders as load_transcoders
 )
 
 __all__ = [
-    'SparseTranscoderEncoder',
+    'SparseCLTEncoder',
     'TranscoderWeights',
     'load_transcoders',
     '__version__'

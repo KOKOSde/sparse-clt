@@ -3,7 +3,7 @@ requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sparse-transcoder"
+name = "sparse-clt"
 dynamic = ["version"]
 description = "Optimized sparse feature extraction for transformer models (LLMs/VLMs)"
 readme = "README.md"
@@ -46,11 +46,11 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/KOKOSde/sparse-transcoder"
-Documentation = "https://github.com/KOKOSde/sparse-transcoder#readme"
-Repository = "https://github.com/KOKOSde/sparse-transcoder"
-"Bug Tracker" = "https://github.com/KOKOSde/sparse-transcoder/issues"
+Homepage = "https://github.com/KOKOSde/sparse-clt"
+Documentation = "https://github.com/KOKOSde/sparse-clt#readme"
+Repository = "https://github.com/KOKOSde/sparse-clt"
+"Bug Tracker" = "https://github.com/KOKOSde/sparse-clt/issues"
 
 [tool.setuptools.dynamic]
-version = {attr = "sparse_transcoder.__version__"}
+version = {attr = "sparse_clt.__version__"}
 

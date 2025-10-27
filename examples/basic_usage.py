@@ -5,7 +5,7 @@ Shows how to extract sparse features from transformer activations
 """
 
 import torch
-from sparse_transcoder import SparseTranscoderEncoder, TranscoderWeights
+from sparse_transcoder import SparseCLTEncoder, TranscoderWeights
 
 
 def example_basic():
@@ -36,7 +36,7 @@ def example_basic():
     }
     
     # Create encoder
-    encoder = SparseTranscoderEncoder(
+    encoder = SparseCLTEncoder(
         transcoders=transcoders,
         top_k=50,
         activation_threshold=1.0
@@ -80,7 +80,7 @@ def example_attribution():
         for i in range(20, 25)
     }
     
-    encoder = SparseTranscoderEncoder(transcoders, top_k=30)
+    encoder = SparseCLTEncoder(transcoders, top_k=30)
     
     # Hidden states
     hidden_states = {

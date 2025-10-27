@@ -1,7 +1,7 @@
 include README.md
 include LICENSE
 include pyproject.toml
-recursive-include sparse_transcoder *.py
+recursive-include sparse_clt *.py
 recursive-include tests *.py
 recursive-include examples *.py
 

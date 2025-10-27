@@ -1,32 +1,44 @@
-# 🚀 Sparse Transcoder: Optimized Feature Extraction for Transformer Models
+# 🚀 Sparse CLT: Cross-Layer Transcoder Feature Extraction
 
-[![PyPI version](https://badge.fury.io/py/sparse-transcoder.svg)](https://badge.fury.io/py/sparse-transcoder)
+[![PyPI version](https://badge.fury.io/py/sparse-clt.svg)](https://badge.fury.io/py/sparse-clt)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Author:** Fahad Alghanim  
-**Performance:** Batched sparse feature extraction across transformer layers  
-**Installation:** `pip install sparse-transcoder`
+**Performance:** Batched sparse feature extraction using Cross-Layer Transcoders  
+**Installation:** `pip install sparse-clt`
 
 ---
 
 ## 🎯 What is This?
 
-Sparse Transcoder is an optimized PyTorch library for extracting sparse features from transformer model activations. It's designed for:
+**Sparse CLT** is an optimized PyTorch library for extracting sparse interpretable features from transformer models using **Cross-Layer Transcoders (CLTs)**.
 
-- **Model Interpretability** - Understanding what features activate in LLMs/VLMs
-- **Attribution Analysis** - Finding which features influence outputs
-- **Efficient Processing** - Batched operations across multiple layers
-- **Production Ready** - Fast inference with minimal overhead
+### What are Cross-Layer Transcoders?
+
+Cross-Layer Transcoders (CLTs) are neural networks trained to decompose dense MLP activations into sparse, interpretable features:
+
+```
+h ∈ ℝ^d → f = ReLU(W_enc @ h + b_enc) ∈ ℝ^m (sparse features)
+```
+
+Unlike standard autoencoders that reconstruct the same layer, CLTs predict the **next layer's activations**, learning features that are causally relevant to the model's computation.
+
+### This Library Provides:
+
+- **Model Interpretability** - Extract interpretable features from any LLM/VLM
+- **Attribution Analysis** - Find which CLT features influence specific outputs  
+- **Efficient Processing** - Batched operations across 20+ layers simultaneously
+- **Production Ready** - Fast inference, memory-efficient, well-tested
 
 ---
 
 ## ⚡ Key Features
 
-- 🔥 **Batched Processing** - Extract features across multiple layers simultaneously
-- 💾 **Memory Efficient** - Automatic chunking for long sequences
-- 🎯 **Top-K Extraction** - Get only the most activated features
+- 🔥 **Batched CLT Encoding** - Process multiple layers simultaneously
+- 💾 **Memory Efficient** - Automatic chunking for sequences up to 2048+ tokens
+- 🎯 **Top-K Extraction** - Get only the most activated features per position
 - 🚀 **GPU Optimized** - Vectorized operations, no Python loops
 - 📦 **Easy to Use** - Simple API, works with any transformer model
 - 🔧 **Configurable** - Threshold filtering, top-k control, batch sizes
@@ -36,7 +48,7 @@ Sparse Transcoder is an optimized PyTorch library for extracting sparse features
 ## 📦 Installation
 
 ```bash
-pip install sparse-transcoder
+pip install sparse-clt
 ```
 
 **Requirements:**
@@ -50,24 +62,24 @@ pip install sparse-transcoder
 
 ```python
 import torch
-from sparse_transcoder import SparseTranscoderEncoder, load_transcoders
+from sparse_clt import SparseCLTEncoder, load_transcoders
 
-# Load your transcoder weights
+# Load your trained CLT weights
 transcoders = load_transcoders(
-    transcoder_dir='/path/to/transcoders',
-    layers=[40, 41, 42, 43, 44],
+    transcoder_dir='/path/to/clt_checkpoints',
+    layers=[40, 41, 42, 43, 44],  # Which layers have CLTs
     device='cuda'
 )
 
 # Create encoder
-encoder = SparseTranscoderEncoder(
+encoder = SparseCLTEncoder(
     transcoders=transcoders,
-    top_k=50,                    # Top 50 features per position
-    activation_threshold=1.0,     # Minimum activation value
-    chunk_size=512                # Process 512 tokens at a time
+    top_k=50,                     # Top 50 features per position
+    activation_threshold=1.0,      # Minimum activation value
+    chunk_size=512                 # Process 512 tokens at a time
 )
 
-# Extract features from hidden states
+# Extract CLT features from hidden states
 hidden_states = {
     40: torch.randn(1, 256, 5120, device='cuda'),  # [batch, seq, hidden]
     41: torch.randn(1, 256, 5120, device='cuda'),
@@ -89,20 +101,16 @@ for layer_idx, layer_features in features.items():
 
 ## 📊 Performance
 
-### Baseline vs Sparse Transcoder
+### Why Use This Library?
 
-| Operation | Baseline | Sparse Transcoder | Improvement |
-|-----------|----------|-------------------|-------------|
-| Single layer encoding | 45ms | 45ms | ~1x (equivalent) |
-| 23 layer encoding | 1035ms | 1040ms | ~1x (equivalent) |
-| **Memory efficient** | ❌ OOM on long seq | ✅ Handles any length | ∞x |
-| **API simplicity** | ❌ Manual loops | ✅ One function call | Much better |
+| Feature | Manual Loops | Sparse CLT |
+|---------|-------------|------------|
+| API simplicity | ❌ Manual loops | ✅ One function call |
+| Memory efficiency | ❌ OOM on long seq | ✅ Handles any length |
+| Batched processing | ❌ Sequential | ✅ All layers at once |
+| Production ready | ❌ Research code | ✅ Tested & documented |
 
-**Why same speed?** PyTorch already optimizes matrix operations heavily. The value here is:
-- **Cleaner API** - No manual loops
-- **Memory efficiency** - Automatic chunking
-- **Production ready** - Well-tested, documented code
-- **Batched interface** - Process multiple layers at once
+**Speed:** Equivalent to manual implementation (~45ms per layer) but with much cleaner API and automatic memory management.
 
 ---
 
@@ -112,7 +120,7 @@ for layer_idx, layer_features in features.items():
 
 ```python
 # Automatically chunks long sequences
-encoder = SparseTranscoderEncoder(
+encoder = SparseCLTEncoder(
     transcoders=transcoders,
     chunk_size=512  # Process 512 tokens at a time
 )
@@ -126,7 +134,7 @@ features = encoder.encode_layer(40, long_hidden)
 
 ```python
 # Only keep features above threshold
-encoder = SparseTranscoderEncoder(
+encoder = SparseCLTEncoder(
     transcoders=transcoders,
     activation_threshold=2.0,  # Higher threshold = sparser
     top_k=100
@@ -149,51 +157,46 @@ for feature in graph_features[:5]:
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ How Cross-Layer Transcoders Work
 
-### Core Components
+### Standard SAE (Same-Layer Reconstruction)
+```
+Layer N:  h_n → SAE → reconstruct h_n
+Problem:  Features may not be causally relevant
+```
 
-1. **SparseTranscoderEncoder** - Main class for feature extraction
-   - Batched weight operations
-   - Memory-efficient chunking
-   - Top-k extraction with thresholding
+### Cross-Layer Transcoder (CLT)
+```
+Layer N:    h_n → CLT → predict h_{n+1}
+Layer N+1:  actual h_{n+1}
+Loss:       ||CLT(h_n) - h_{n+1}||²
 
-2. **TranscoderWeights** - Container for transcoder parameters
-   - W_enc: Encoder weights [feature_dim, hidden_dim]
-   - b_enc: Encoder bias [feature_dim]
-   - W_dec: Decoder weights [hidden_dim, feature_dim]
-   - b_dec: Decoder bias [hidden_dim]
+Advantage:  Features must be causally relevant to predict next layer
+```
 
-3. **Utility Functions**
-   - `load_transcoders()` - Load weights from checkpoint files
-   - `encode_single_layer()` - Fast single-layer encoding
-   - `encode_all_layers()` - Batched multi-layer encoding
-
-### How It Works
+### This Library's Role
 
 ```
-Input: Hidden States [B, T, H]
+Input: Hidden States from Model [B, T, H]
          ↓
-Encode: h @ W_enc.T + b_enc
+CLT Encode: h @ W_enc.T + b_enc
          ↓
 Activation: ReLU(features)
          ↓
-Threshold: features >= threshold
+Sparse CLT: Threshold + Top-K
          ↓
-Top-K: torch.topk(features, k, dim=-1)
-         ↓
-Output: Sparse Features [B, T, K]
+Output: Interpretable Features [B, T, K]
 ```
 
 ---
 
 ## 📚 API Reference
 
-### `SparseTranscoderEncoder`
+### `SparseCLTEncoder`
 
 **Constructor:**
 ```python
-encoder = SparseTranscoderEncoder(
+encoder = SparseCLTEncoder(
     transcoders: Dict[int, TranscoderWeights],
     top_k: int = 20,
     activation_threshold: float = 1.0,
@@ -204,7 +207,7 @@ encoder = SparseTranscoderEncoder(
 
 **Methods:**
 
-- `encode_layer(layer_idx, hidden)` - Encode single layer
+- `encode_layer(layer_idx, hidden)` - Encode single layer with CLT
 - `encode_all_layers(hidden_states)` - Encode multiple layers (batched)
 - `encode_chunked(layer_idx, hidden)` - Memory-efficient for long sequences
 - `extract_attribution_features(hidden_states, top_k_global)` - For graph generation
@@ -225,17 +228,17 @@ encoder = SparseTranscoderEncoder(
 
 ### 1. Model Interpretability
 
-Understand which features activate in your model:
+Understand which CLT features activate in your model:
 
 ```python
 features = encoder.encode_layer(layer_idx=25, hidden=hidden_states)
 top_features = features['indices'][0, -1, :10]  # Top 10 at last position
-print(f"Most active features: {top_features}")
+print(f"Most active CLT features: {top_features}")
 ```
 
 ### 2. Attribution Analysis
 
-Find features that influence specific outputs:
+Find CLT features that influence specific outputs:
 
 ```python
 graph_features = encoder.extract_attribution_features(
@@ -247,14 +250,14 @@ graph_features = encoder.extract_attribution_features(
 
 ### 3. Feature Steering
 
-Identify features to amplify/suppress for behavior modification:
+Identify CLT features to amplify/suppress for behavior modification:
 
 ```python
-# Find features above threshold
+# Find strongly activated features
 features = encoder.encode_all_layers(hidden_states)
 for layer, data in features.items():
     strong_features = data['indices'][data['activations'] > 5.0]
-    print(f"Layer {layer}: {len(strong_features)} strong features")
+    print(f"Layer {layer}: {len(strong_features)} strong CLT features")
 ```
 
 ---
@@ -264,8 +267,8 @@ for layer, data in features.items():
 ### Running Tests
 
 ```bash
-git clone https://github.com/KOKOSde/sparse-transcoder.git
-cd sparse-transcoder
+git clone https://github.com/KOKOSde/sparse-clt.git
+cd sparse-clt
 pip install -e ".[dev]"
 pytest tests/
 ```
@@ -281,14 +284,14 @@ python -m build
 
 ## 📖 Citation
 
-If you use Sparse Transcoder in your research, please cite:
+If you use Sparse CLT in your research, please cite:
 
 ```bibtex
-@software{alghanim2025sparse,
+@software{alghanim2025sparseclt,
   author = {Alghanim, Fahad},
-  title = {Sparse Transcoder: Optimized Feature Extraction for Transformer Models},
+  title = {Sparse CLT: Cross-Layer Transcoder Feature Extraction for Transformer Models},
   year = {2025},
-  url = {https://github.com/KOKOSde/sparse-transcoder}
+  url = {https://github.com/KOKOSde/sparse-clt}
 }
 ```
 
@@ -320,15 +323,11 @@ GitHub: [@KOKOSde](https://github.com/KOKOSde)
 
 ---
 
-## 🌟 Acknowledgments
+## 🌟 Related Work
 
-This library supports research in:
-- Model interpretability and explainability
-- AI safety and alignment
-- Feature attribution analysis
-- Neural network mechanistic interpretability
-
-Built with ❤️ for the ML interpretability community.
+- **Cross-Layer Transcoders** - Original method for causally-relevant feature extraction
+- **Mechanistic Interpretability** - Understanding how models work internally
+- **Sparse Autoencoders (SAEs)** - Same-layer reconstruction (this library uses CLTs instead)
 
 ---
 
@@ -336,7 +335,6 @@ Built with ❤️ for the ML interpretability community.
 
 **⚡ Fast | 🎯 Accurate | 📦 Easy to Use**
 
-[Documentation](https://github.com/KOKOSde/sparse-transcoder) | [PyPI](https://pypi.org/project/sparse-transcoder/) | [Issues](https://github.com/KOKOSde/sparse-transcoder/issues)
+[Documentation](https://github.com/KOKOSde/sparse-clt) | [PyPI](https://pypi.org/project/sparse-clt/) | [Issues](https://github.com/KOKOSde/sparse-clt/issues)
 
 </div>
-

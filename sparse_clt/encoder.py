@@ -27,7 +27,7 @@ class TranscoderWeights:
     layer: int
 
 
-class SparseTranscoderEncoder:
+class SparseCLTEncoder:
     """
     Optimized sparse encoder for CLT feature extraction.
     
@@ -63,7 +63,7 @@ class SparseTranscoderEncoder:
         # Pre-stack weights for batched operations
         self._prepare_batched_weights()
         
-        print(f"SparseTranscoderEncoder initialized:")
+        print(f"SparseCLTEncoder initialized:")
         print(f"  Layers: {sorted(transcoders.keys())}")
         print(f"  Top-k: {top_k}")
         print(f"  Threshold: {activation_threshold}")
@@ -329,7 +329,7 @@ def load_transcoders_from_dir(
 
 if __name__ == '__main__':
     # Test
-    print("Testing SparseTranscoderEncoder...")
+    print("Testing SparseCLTEncoder...")
     
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(f"Device: {device}")
@@ -350,7 +350,7 @@ if __name__ == '__main__':
         )
     
     # Create encoder
-    encoder = SparseTranscoderEncoder(transcoders, top_k=20)
+    encoder = SparseCLTEncoder(transcoders, top_k=20)
     
     # Test encoding
     hidden = torch.randn(1, 256, hidden_dim, device=device)
